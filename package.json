@@ -1,0 +1,20 @@
+{
+  "name": "vocabulary-extender",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "app/web",
+    "server",
+    "background",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "yarn workspace @vocab/web dev",
+    "dev:server": "yarn workspace @vocab/server dev",
+    "dev:background": "yarn workspace @vocab/background dev",
+    "build": "yarn workspaces run build",
+    "typecheck": "yarn workspaces run typecheck"
+  }
+}
+
