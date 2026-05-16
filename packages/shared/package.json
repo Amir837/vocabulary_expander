@@ -1,5 +1,5 @@
 {
-  "name": "@vocab/shared",
+  "name": "@vocabulary-expander/shared",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -12,6 +12,7 @@
     }
   },
   "scripts": {
+    "start": "yarn --cwd ../.. start",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit"
   }

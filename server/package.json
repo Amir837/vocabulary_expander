@@ -1,15 +1,16 @@
 {
-  "name": "@vocab/server",
+  "name": "@vocabulary-expander/server",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
+    "start": "yarn --cwd .. start",
     "dev": "tsx src/index.ts",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@vocab/shared": "0.0.0"
+    "@vocabulary-expander/shared": "0.0.0"
   }
 }
 

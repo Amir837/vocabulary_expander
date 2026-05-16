@@ -1,4 +1,4 @@
 export function App() {
-  return <main>Vocabulary Extender</main>;
+  return <main>Vocabulary Expander</main>;
 }
 

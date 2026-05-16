@@ -3,6 +3,7 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "ignoreDeprecations": "6.0",
     "strict": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -10,10 +11,10 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@vocab/shared": [
+      "@vocabulary-expander/shared": [
         "packages/shared/src/index.ts"
       ],
-      "@vocab/shared/*": [
+      "@vocabulary-expander/shared/*": [
         "packages/shared/src/*"
       ]
     }

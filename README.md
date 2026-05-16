@@ -1,4 +1,4 @@
-# Vocabulary Extender
+# Vocabulary Expander
 
 TypeScript monorepo for a visualization web app, server orchestrator, background processes, shared code, docs, and repo-local agent guidance.
 
