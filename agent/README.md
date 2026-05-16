@@ -14,6 +14,12 @@ Ask Codex to use a skill explicitly, for example:
 Use agent/skills/spec to write an implementation spec for search.
 ```
 
+Current repo-local skills:
+
+- `spec` - create feature implementation specs under `docs/feature-implementation`.
+- `session-summary` - capture short draft summaries under `docs/contracts/session-summaries`.
+- `contract-sync` - validate session summaries against code and update `docs/contracts`.
+
 ## Flows
 
 Create flows under `agent/flows/[flow-name].md`.
@@ -25,4 +31,3 @@ Ask Codex to use a flow explicitly, for example:
 ```txt
 Use agent/flows/new-feature.md for this task.
 ```
-

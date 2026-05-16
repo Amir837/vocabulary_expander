@@ -7,11 +7,12 @@ description:
 
 # Spec Writing
 
-Create MD spec file at `./docs/[spec-name].spec.md` focused on implementation steps to achieve the
-goal given in a prompt.
+Create MD spec file at `./docs/feature-implementation/[spec-name].spec.md` focused on implementation
+steps to achieve the goal given in a prompt.
 
-Use the simplest possible solution. Research online examples and documentation for completeness and
-correctness. Spec must be concise.
+Use the simplest possible solution. Read `docs/README.md` and `docs/contracts` first so the spec
+respects component responsibilities and contracts. Research online examples and documentation for
+completeness and correctness when needed. Spec must be concise.
 
 ## Structure
 
