@@ -1,53 +1,139 @@
-# Component Contract Descriptions
+# Component Plan and Contracts
 
-## Contract Principles
+This project is a focused vocabulary expansion tool for learning a new language
+by domain/context. A learner starts with a real-world topic and a few anchor
+words. The system expands those anchors into related words, phrases, and example
+sentences found in real language use.
 
-- `packages/shared` defines shared vocabulary before feature code depends on it.
-- `server` owns application orchestration and validates external input before it reaches domain workflows.
-- `background` owns asynchronous work that should not block request or UI flows.
-- `app/web` owns presentation, interaction, and visualization, while consuming shared contracts and server APIs.
-- Contracts should describe current intent and accepted boundaries, not temporary implementation details.
+## High-Level Product Flow
 
-## `app/web`
+1. The learner creates a learning topic, for example "restaurant conversations."
+2. The learner provides target language information and several anchor words,
+   such as "restaurant," "menu," "waiter," "dish," and "bill."
+3. The server validates the topic and starts an expansion job.
+4. The background process searches or scans external text sources for real
+   examples around the anchor words.
+5. The background process extracts nearby words, phrases, and sentence examples,
+   then records simple co-occurrence signals, such as how often words appear in
+   the same sentence or nearby context.
+6. The server stores the resulting domain dictionary, sentence examples, source
+   metadata, and job status.
+7. The web app lets the learner explore, review, and study the words in context.
 
-The web app is the user-facing surface. It should render vocabulary data, expose workflows for exploration and review, and keep UI state local unless that state needs to become durable project data.
+## Core Domain Concepts
 
-It may depend on `packages/shared` for types and contracts, and on `server` APIs for persisted or orchestrated behavior.
+These concepts should become shared contracts before feature code depends on
+them:
 
-It should not own durable storage rules, background job behavior, or server-only validation.
+- `LearningTopic` - the learner's focused domain, target language, optional
+  source language, and study goal.
+- `AnchorWord` - a user-provided starting word or phrase for expansion.
+- `ExpansionJob` - a background task that discovers related vocabulary for a
+  topic.
+- `SourceDocument` - source metadata for external text used during expansion.
+- `SentenceExample` - a real sentence or short context window where an anchor or
+  related term appears.
+- `CandidateTerm` - a discovered word or phrase before the learner accepts it
+  into the dictionary.
+- `VocabularyEntry` - a selected or promoted term with definitions, examples,
+  and learning metadata.
+- `TermRelation` - a relationship between an anchor word and a discovered term,
+  based on proximity, frequency, or co-occurrence.
 
-## `server`
+## Component Contracts
 
-The server is the API and orchestration boundary. It should translate client requests into validated domain operations, coordinate persistence or external services when those are introduced, and expose stable API contracts to the web app.
+### `app/web`
 
-It may depend on `packages/shared` for shared types, schemas, constants, and API contracts.
+The web app owns the learner-facing experience.
 
-It should not contain UI-specific rendering behavior or long-running work that belongs in `background`.
+It should let the learner create a topic, enter anchor words, start expansion,
+watch progress, inspect discovered vocabulary, and study example sentences.
 
-## `background`
+It may depend on shared types and server APIs. It should treat expansion results
+as server-owned data.
 
-The background process owns jobs, queues, schedulers, and other asynchronous tasks. It should run work that can happen outside the immediate user request lifecycle.
+It should not scrape the internet, run ranking logic, own durable storage rules,
+or decide background job behavior.
 
-It may depend on `packages/shared` for job payloads, vocabulary types, and contract definitions.
+### `server`
 
-It should not expose UI behavior directly or become the primary API surface for the web app.
+The server owns the product API and orchestration boundary.
 
-## `packages/shared`
+It should validate learner input, create and update learning topics, expose job
+status, persist accepted vocabulary data, and coordinate background expansion
+jobs.
 
-The shared package owns the common language of the system: vocabulary types, schemas, constants, API contracts, and utilities that must remain consistent across components.
+It may depend on shared contracts, persistence adapters, and background job
+interfaces.
 
-It should stay framework-neutral. Browser-only, server-only, and background-only implementation details should remain in their owning component.
+It should not contain UI rendering logic or perform long-running scanning work
+inside request/response flows.
 
-## `docs`
+### `background`
 
-The docs folder records durable project intent. Contract docs describe stable boundaries. Session summaries record draft decisions and rationale. Feature implementation specs translate accepted intent into concrete implementation steps.
+The background process owns long-running vocabulary expansion work.
 
-## `agent`
+It should search or scan configured text sources, collect context around anchor
+words, extract nearby terms and phrases, rank candidate vocabulary, deduplicate
+results, and report progress back to the server.
 
-The agent folder contains repo-local Codex instructions. Skills and flows should keep future implementation work consistent with these docs.
+It may depend on shared job payloads, source-provider adapters, tokenization or
+NLP utilities, and persistence/job infrastructure chosen later.
 
-## Open Contract Questions
+It should not expose the primary product API directly to the web app.
 
-- The domain model currently contains only the placeholder `VocabularyEntry` type.
-- Persistence, API transport, vocabulary generation, user workflows, and background job contracts are not specified yet.
-- The first feature specs should refine shared types before adding behavior that depends on them.
+### `packages/shared`
+
+The shared package owns cross-component language.
+
+It should define framework-neutral types, schemas, API request/response shapes,
+job payloads, job statuses, and domain constants used by the web app, server,
+and background process.
+
+It should not contain browser-only UI behavior, server persistence details, or
+background implementation details.
+
+### `docs`
+
+The docs folder owns durable project intent.
+
+Contract docs describe accepted component responsibilities. Feature specs
+translate product intent into implementation steps. Session summaries capture
+draft decisions that may later become contracts.
+
+### `agent`
+
+The agent folder owns repo-local workflows for repeatable implementation work.
+
+Skills and flows should help future Codex sessions write specs, capture
+decisions, and synchronize contracts with implementation.
+
+## Data and Boundary Rules
+
+- The web app sends learner intent: topic, language choices, and anchor words.
+- The server returns stable topic, job, vocabulary, and sentence contracts.
+- Background jobs receive explicit job payloads and write structured results.
+- Expansion output should preserve provenance: source URL or identifier, matched
+  anchor, sentence/context text, language, and extraction metadata.
+- Ranking should be explainable enough to debug: frequency, proximity to
+  anchors, source count, or similar signals.
+- The system should prefer storing useful sentence examples and source metadata
+  over storing whole copied pages.
+- Generated definitions, translations, pronunciations, or study hints are
+  optional future layers, not required for the first vocabulary expansion loop.
+
+## Open Decisions
+
+- Which storage layer will hold topics, jobs, source metadata, sentences, and
+  vocabulary entries.
+- Which external text sources or search APIs will be used first.
+- Which languages are supported in the first implementation pass.
+- Which tokenizer, sentence splitter, or NLP library should handle each target
+  language.
+- Whether definitions and translations are generated, user-provided, imported
+  from dictionaries, or postponed.
+- How learners accept, reject, hide, or mark discovered candidate terms.
+- How candidate terms should be scored from co-occurrence, sentence proximity,
+  source count, or other signals.
+- Whether the first version supports accounts and multiple learners, or starts
+  as a local/single-user tool.
