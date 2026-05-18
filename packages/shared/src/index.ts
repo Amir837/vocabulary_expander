@@ -1,2 +1,6 @@
-export type { VocabularyEntry } from "./types/vocabulary";
-
+export type {
+  VocabularyEntry,
+  VocabularyGraph,
+  WordEdge,
+  WordNode
+} from "./types/vocabulary";
